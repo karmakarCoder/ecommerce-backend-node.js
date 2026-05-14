@@ -19,9 +19,9 @@ const importData = async () => {
     console.log("Creating Admin...");
     await User.create({
       name: "Admin User",
-      email: "admin@example.com",
-      password: "password123456",
-      is_admin: true,
+      email: "admin@gmail.com",
+      password: "12345678",
+      role: "super_admin",
     });
 
     console.log("--- Admin User Created Successfully! ---");

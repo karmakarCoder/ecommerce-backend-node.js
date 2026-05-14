@@ -27,11 +27,24 @@ export const protect = async (req, res, next) => {
 };
 
 export const admin = (req, res, next) => {
-  if (req.user && req.user.is_admin) {
+  if (
+    req.user &&
+    (req.user.role === "admin" || req.user.role === "super_admin")
+  ) {
     next();
   } else {
-    res.status(401).json({
-      message: "Admin only access this route",
+    res.status(403).json({
+      message: "Access denied. Admin or Super Admin role required.",
+    });
+  }
+};
+
+export const superAdmin = (req, res, next) => {
+  if (req.user && req.user.role === "super_admin") {
+    next();
+  } else {
+    res.status(403).json({
+      message: "Access denied. Super Admin privileges required.",
     });
   }
 };

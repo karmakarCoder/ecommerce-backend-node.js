@@ -3,6 +3,11 @@ import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema(
   {
+    role: {
+      type: String,
+      enum: ["user", "admin", "super_admin"],
+      default: "user",
+    },
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     phone: {
@@ -25,6 +30,11 @@ const userSchema = new mongoose.Schema(
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
+
+userSchema.pre("save", function () {
+  this.is_admin = this.role === "admin" || this.role === "super_admin";
+  return;
+});
 
 // Encrypt password before saving
 userSchema.pre("save", async function () {

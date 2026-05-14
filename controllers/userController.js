@@ -36,7 +36,13 @@ export const registerUser = async (req, res, next) => {
       throw new Error("User already exists");
     }
 
-    const user = await User.create({ name, email, password, image });
+    const user = await User.create({
+      name,
+      email,
+      password,
+      image,
+      role: "user",
+    });
     res.status(201).json({
       message: "Your account is created successfully",
       data: {
@@ -44,6 +50,7 @@ export const registerUser = async (req, res, next) => {
         name: user.name,
         email: user.email,
         image: user.image,
+        role: "user",
         token: generateToken(user._id),
       },
     });
@@ -81,6 +88,7 @@ export const authUser = async (req, res, next) => {
           name: user.name,
           email: user.email,
           image: user.image,
+          role: user.role,
           token: generateToken(user._id),
           expire_in: "30d",
         },
@@ -209,6 +217,25 @@ export const banUser = async (req, res, next) => {
       res.status(404);
       throw new Error("User not found");
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+// create admin
+export const createAdminAccount = async (req, res, next) => {
+  const { name, email, password, role } = req.body;
+  try {
+    const userExists = await User.findOne({ email });
+    if (userExists)
+      return res.status(400).json({ message: "Email already taken" });
+
+    if (!["admin", "super_admin"].includes(role)) {
+      return res.status(400).json({ message: "Invalid admin role" });
+    }
+
+    const admin = await User.create({ name, email, password, role });
+    res.status(201).json({ message: `${role} created successfully`, admin });
   } catch (error) {
     next(error);
   }
