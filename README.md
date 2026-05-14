@@ -1,4 +1,4 @@
-# E-Commerce Backend API v1
+# E-Commerce Backend API v2
 
 A robust Node.js backend for e-commerce, featuring Stripe integration, automated email notifications via Brevo, and comprehensive admin controls.
 
@@ -31,7 +31,3 @@ A robust Node.js backend for e-commerce, featuring Stripe integration, automated
 3. Configure `.env`:
    - `MONGO_URI`, `JWT_SECRET`, `STRIPE_KEY`, `BREVO_KEY`
 4. Start the server: `npm start`
-
-## 📅 Roadmap
-- **v1 API:** Stable (Current)
-- **v2 API:** Coming soon with advanced updates and improved performance.
