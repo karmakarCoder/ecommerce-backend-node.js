@@ -25,6 +25,8 @@ A robust Node.js backend for e-commerce, featuring Stripe integration, automated
 - **Notifications:** Automated email alerts to users when banned (Brevo).
 - **Orders:** Centralized list of all customer orders.
 
+- Postman collection https://drive.google.com/file/d/173eeEpbqhX1RVbAfrZuxWTFmNrmxSnQC/view?usp=sharing
+
 ## 🚀 Installation
 1. Clone the repo: `git clone <repo-url>`
 2. Install dependencies: `npm install`
