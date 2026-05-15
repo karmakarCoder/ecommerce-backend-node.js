@@ -1,17 +1,20 @@
 import express from "express";
 import {
-  authUser,
-  registerUser,
   getUserProfile,
   getUsers,
-  updateUser,
-  deleteUser,
   banUser,
-  createAdminAccount,
   getUserDetails,
 } from "../controllers/userController.js";
 import { admin, protect, superAdmin } from "../middleware/authMiddleware.js";
 import upload from "../middleware/uploadMiddleware.js";
+import {
+  authUser,
+  createAdminAccount,
+  deleteUser,
+  registerUser,
+  updateUser,
+  verifyOTP,
+} from "../controllers/authController.js";
 
 const router = express.Router();
 
@@ -30,6 +33,7 @@ router.post(
 );
 router.post("/signup", upload.single("image"), registerUser);
 router.post("/login", upload.none(), authUser);
+router.post("/verify", upload.single(), verifyOTP);
 router.get("/profile", protect, getUserProfile);
 
 export default router;

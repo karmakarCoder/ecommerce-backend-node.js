@@ -22,6 +22,9 @@ const userSchema = new mongoose.Schema(
     is_admin: { type: Boolean, required: true, default: false },
     is_banned: { type: Boolean, default: false },
     ban_expires: { type: Date },
+    is_verified: { type: Boolean, default: false },
+    otp: { type: String },
+    otp_expiry: { type: Date },
   },
   { timestamps: true },
 );
