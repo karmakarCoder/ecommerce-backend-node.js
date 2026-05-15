@@ -1,4 +1,4 @@
-# E-Commerce Backend API v2
+# E-Commerce Backend API v3
 
 A robust Node.js backend for e-commerce, featuring Stripe integration, automated email notifications via Brevo, and comprehensive admin controls.
 
