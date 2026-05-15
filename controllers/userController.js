@@ -1,6 +1,7 @@
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 import sendBanEmail from "../utils/sendEmail.js";
+import mongoose from "mongoose";
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
@@ -14,6 +15,30 @@ export const getUsers = async (req, res, next) => {
     res.status(201).json({
       message: "User list data retrive successfully",
       data: users,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// user details
+export const getUserDetails = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      res.status(400);
+      throw new Error("Invalid User ID format");
+    }
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      res.status(404);
+      throw new Error("User not found");
+    }
+    res.status(200).json({
+      message: "User details retrieved successfully",
+      data: user,
     });
   } catch (error) {
     next(error);
@@ -119,17 +144,6 @@ export const updateUser = async (req, res, next) => {
       user.phone = req.body.phone || user.phone;
       user.address = req.body.address || user.address;
       user.image = req.body.image || user.image;
-
-      if (req.body.is_admin !== undefined && req.body.is_admin !== "") {
-        user.is_admin = req.body.is_admin;
-      }
-
-      if (req.body.is_banned !== undefined && req.body.is_banned !== "") {
-        user.is_banned = req.body.is_banned;
-      }
-
-      user.ban_expires = req.body.ban_expires || user.ban_expires;
-
       if (req.body.password) {
         user.password = req.body.password;
       }
@@ -173,11 +187,13 @@ export const deleteUser = async (req, res, next) => {
           message: "Cannot delete an admin user",
           status: false,
         });
+        return;
       }
       await User.deleteOne({ _id: user._id });
-      res
-        .status(201)
-        .json({ message: "User removed successfully", deleted_id: user._id });
+      res.status(201).json({
+        message: "User removed successfully, you can't restore this user",
+        deleted_id: user._id,
+      });
     } else {
       res.status(404).json({
         message: "User not found, try again",
@@ -204,7 +220,6 @@ export const banUser = async (req, res, next) => {
           expiry: duration,
           reason: reason,
         });
-
         console.log("email send it");
       } catch (emailError) {
         console.error("Email failed to send, but user was banned:", emailError);

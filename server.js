@@ -26,11 +26,9 @@ const app = express();
 const __dirname = path.resolve();
 
 app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:3000" }));
+app.use("/api/orders/webhook", express.raw({ type: "application/json" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-console.log("SMTP_USER length:", process.env.SMTP_USER?.length);
-console.log("SMTP_PASS length:", process.env.SMTP_PASS?.length);
 
 // routes
 app.use("/api/products", productRoutes);

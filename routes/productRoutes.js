@@ -5,6 +5,8 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
+  createProductReview,
+  replyToReview,
 } from "../controllers/productController.js";
 import upload from "../middleware/uploadMiddleware.js";
 import { admin, protect } from "../middleware/authMiddleware.js";
@@ -13,6 +15,8 @@ const router = express.Router();
 
 // Routes for base endpoint
 router.route("/").get(getProducts);
+
+router.post("/:id/reviews", protect, upload.single(), createProductReview);
 
 // create product
 router.post("/", protect, admin, (req, res, next) => {
@@ -26,6 +30,14 @@ router.post("/", protect, admin, (req, res, next) => {
     createProduct(req, res, next);
   });
 });
+
+router.post(
+  "/:product_id/reviews/:review_id/reply",
+  protect,
+  admin,
+  upload.single(),
+  replyToReview,
+);
 
 // Routes for specific IDs
 router
